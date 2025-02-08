@@ -1,12 +1,13 @@
-import "reflect-metadata"
-import 'express-async-errors';
 import express, { Router } from 'express';
+import 'express-async-errors';
+import "reflect-metadata"
 import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import compression from 'compression';
-import * as teste from '../../main/customers/cutomers.routes';
 import { AppDataSource } from "../../infra/database/Datasource";
+import { setupRoutes } from "./config/setupRoutes";
+import { errorHandler } from "./middlewares/ErrorHandler";
 
 const app = express();
 
@@ -18,14 +19,13 @@ app.use(morgan(`tiny`));
 app.use(express.json());
 app.use(compression());
 
-const router = Router();
-teste.default(router);
-app.use('/api/v1', router);
+setupRoutes(app);
+app.use(errorHandler);
 
-
-app.listen(3333, async () => {
-  await AppDataSource.initialize()
+const PORT = process.env.PORT || 3333;
+app.listen(PORT, () => {
+  AppDataSource.initialize()
     .then(() => console.log('Database connection stablished...'))
     .catch((error) => console.error('Error on connect to database: ', error.message));
-  console.log('Server running on PORT 3333...');
+  console.log(`Server running on PORT ${PORT}...`);
 });
