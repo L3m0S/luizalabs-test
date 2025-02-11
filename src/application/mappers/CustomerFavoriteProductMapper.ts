@@ -1,0 +1,22 @@
+import { CustomerFavoriteProductDTO } from '@application/dtos/CustomerFavoriteDTO';
+import { CustomerFavoriteProduct } from '@domain/entities/CustomerFavoriteProduct';
+
+export class CustomerFavoriteProductMapper {
+	public static toDTO(entity: CustomerFavoriteProduct): CustomerFavoriteProductDTO {
+		const { id, product } = entity;
+		return {
+			id: id,
+			description: product.description,
+			externalProductId: product.externalProductId,
+			image: product.image,
+			price: +product.price,
+			title: product.title,
+		};
+	}
+
+	public static entityListToDTOList(
+		entities: CustomerFavoriteProduct[],
+	): CustomerFavoriteProductDTO[] {
+		return entities.map((entity) => this.toDTO(entity));
+	}
+}
