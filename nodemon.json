@@ -1,0 +1,6 @@
+{
+	"ignore": ["**/*.test.ts", ".git", "node_modules"],
+	"watch": ["src"],
+	"exec": "node --env-file=.env -r tsconfig-paths/register -r ts-node/register ./src/presentation/express/server.ts",
+	"ext": "ts, js"
+}
