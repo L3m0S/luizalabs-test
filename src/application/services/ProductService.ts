@@ -8,7 +8,7 @@ import { inject, injectable } from 'tsyringe';
 
 @injectable()
 export class ProductService implements IProductService {
-	private readonly productRepository: IProductRepository;
+	private productRepository: IProductRepository;
 	private readonly productPriceTtl: number = +process?.env?.TTL_DB_PRODUCT_CACHE_MS!;
 
 	constructor(
@@ -36,7 +36,7 @@ export class ProductService implements IProductService {
 		id: number,
 		existingProduct: Product | null,
 	): Promise<Product> {
-		const externalProduct = await this.productsApiProvider.getData(`/${id}`);
+		const externalProduct = await this.productsApiProvider.getById(id);
 
 		if (!externalProduct) {
 			throw new ApiError('Product not found', 404);

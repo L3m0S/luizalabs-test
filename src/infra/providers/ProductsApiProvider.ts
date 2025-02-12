@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { inject, injectable } from 'tsyringe';
 import { IProdutcsApiProvider } from '@application/interfaces/IProductsApiProvider';
 import { ICircuitBreakerProvider } from '@application/interfaces/ICircuitBreakerProvider';
+import { IProduct } from './interfaces/IProduct';
 
 @injectable()
 export class ProductsApiProvider implements IProdutcsApiProvider {
@@ -20,21 +21,13 @@ export class ProductsApiProvider implements IProdutcsApiProvider {
 	}
 
 	private async fetchData(endpoint: string): Promise<any> {
-		console.log(`bateu na api de produtos externos`);
 		const response = await this.httpClient.get(endpoint);
 		return response.data;
 	}
 
-	/**
-	 * Método público que retorna os dados de um endpoint da API externa.
-	 * Implementa caching e utiliza o circuit breaker para maior resiliência.
-	 *
-	 * @param endpoint - O endpoint da API externa a ser consultado.
-	 */
-	public async getData(endpoint: string): Promise<any> {
+	public async getById(id: number): Promise<IProduct> {
 		try {
-			const data = await this.circuitBreaker.fire(endpoint);
-			return data;
+			return (await this.circuitBreaker.fire(`/products/${id}`)) as IProduct;
 		} catch (error) {
 			throw new Error(`External API request failed: ${error}`);
 		}
