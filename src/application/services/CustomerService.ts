@@ -1,10 +1,10 @@
 import { CustomerRepository } from '@infra/database/repositories/CustomerRepository';
-import { ApiError } from 'application/helpers/ApiError';
-import { Customer } from 'domain/entities/Customer';
 import { injectable } from 'tsyringe';
 import { CreateCustomerDTO } from '../dtos/CreateCustomerInputDTO';
 import { ICustomerRepository } from '../interfaces/ICustomerRepository';
 import { ICustomerService } from '../interfaces/ICustomerService';
+import { Customer } from '@domain/entities/Customer';
+import { ApiError } from '@application/helpers/ApiError';
 
 @injectable()
 export class CustomerService implements ICustomerService {
@@ -73,7 +73,7 @@ export class CustomerService implements ICustomerService {
 			throw new ApiError('Email already registered', 400);
 		}
 
-		const updateCustomer = { ...customer, ...customerDTO };
+		const updateCustomer = { id: customer.id, ...customerDTO };
 
 		await this.validateCustomer(updateCustomer);
 
@@ -81,24 +81,19 @@ export class CustomerService implements ICustomerService {
 	}
 
 	public async getAllPaginated(page?: number, size?: number): Promise<[Customer[], number]> {
-		if (page && page < 0) {
-			throw new ApiError("'page' parameter must be non-negative", 400);
+		const pageableOptions: {
+			skip?: number;
+			take?: number;
+		} = {};
+
+		if (page && page >= 0) {
+			pageableOptions.skip = page;
 		}
 
-		if (size && size < 0) {
-			throw new ApiError("'size' parameter must be non-negative", 400);
+		if (size && size >= 0) {
+			pageableOptions.take = size;
 		}
 
-		const DEFAULT_PAGE = 1;
-		const pageSize = size ?? process.env.DEFAULT_PAGE_SIZE!;
-
-		const currentPage = page || DEFAULT_PAGE;
-
-		const skip = +pageSize * (+currentPage - 1);
-
-		return this.customerRepository.findAndCount({
-			skip: +skip,
-			take: +pageSize,
-		});
+		return this.customerRepository.findAndCount(pageableOptions);
 	}
 }
