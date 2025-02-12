@@ -3,11 +3,10 @@ import { CustomerFavoriteProduct } from '@domain/entities/CustomerFavoriteProduc
 
 export class CustomerFavoriteProductMapper {
 	public static toDTO(entity: CustomerFavoriteProduct): CustomerFavoriteProductDTO {
-		const { id, product } = entity;
+		const { product } = entity;
 		return {
-			id: id,
+			id: product.externalProductId,
 			description: product.description,
-			externalProductId: product.externalProductId,
 			image: product.image,
 			price: +product.price,
 			title: product.title,
