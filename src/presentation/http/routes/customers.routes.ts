@@ -8,33 +8,33 @@ const customerController: CustomerController = container.resolve(CustomerControl
 const customerFavoriteProductController = container.resolve(CustomerFavoriteProductController);
 
 export default (router: Router): void => {
-	const customersRouter = Router();
-	router.use('/customers', customersRouter);
+  const customersRouter = Router();
+  router.use('/customers', customersRouter);
 
-	customersRouter.post('/', customerController.create.bind(customerController));
+  customersRouter.post('/', customerController.create.bind(customerController));
 
-	customersRouter.get('/:id', customerController.getById.bind(customerController));
+  customersRouter.get('/:id', customerController.getById.bind(customerController));
 
-	customersRouter.delete('/:id', customerController.deleteById.bind(customerController));
+  customersRouter.delete('/:id', customerController.deleteById.bind(customerController));
 
-	customersRouter.put('/:id', customerController.update.bind(customerController));
+  customersRouter.put('/:id', customerController.update.bind(customerController));
 
-	customersRouter.get('/', customerController.getAllPaginated.bind(customerController));
+  customersRouter.get('/', customerController.getAllPaginated.bind(customerController));
 
-	customersRouter.post(
-		'/:customerId/favorites',
-		customerFavoriteProductController.create.bind(customerFavoriteProductController),
-	);
+  customersRouter.post(
+    '/:customerId/favorites',
+    customerFavoriteProductController.create.bind(customerFavoriteProductController),
+  );
 
-	customersRouter.delete(
-		'/:customerId/favorites/:favoriteId',
-		customerFavoriteProductController.deleteById.bind(customerFavoriteProductController),
-	);
+  customersRouter.delete(
+    '/:customerId/favorites/:externalProductId',
+    customerFavoriteProductController.deleteById.bind(customerFavoriteProductController),
+  );
 
-	customersRouter.get(
-		'/:customerId/favorites',
-		customerFavoriteProductController.findAllByCustomerIdPaginated.bind(
-			customerFavoriteProductController,
-		),
-	);
+  customersRouter.get(
+    '/:customerId/favorites',
+    customerFavoriteProductController.findAllByCustomerIdPaginated.bind(
+      customerFavoriteProductController,
+    ),
+  );
 };

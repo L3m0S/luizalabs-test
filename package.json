@@ -8,8 +8,7 @@
 		"build": "tsc -b && tsc-alias",
 		"lint:check": "prettier --check .",
 		"lint:fix": "prettier --write .",
-		"test": "vitest",
-		"test:coverage": "vitest run --coverage"
+		"test": "vitest"
 	},
 	"repository": {
 		"type": "git",
