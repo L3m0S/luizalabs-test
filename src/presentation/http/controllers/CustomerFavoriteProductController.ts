@@ -5,6 +5,7 @@ import { ICustomerFavoriteProductService } from '@application/interfaces/ICustom
 import { IPage } from '../interfaces/IPage';
 import { CustomerFavoriteProductMapper } from '@application/mappers/CustomerFavoriteProductMapper';
 import { CustomerFavoriteProductDTO } from '@application/dtos/CustomerFavoriteDTO';
+import { PaginationHelper } from '@application/helpers/Paginationhelper';
 
 @injectable()
 export class CustomerFavoriteProductController {
@@ -35,19 +36,25 @@ export class CustomerFavoriteProductController {
 	public async findAllByCustomerIdPaginated(req: Request, res: Response) {
 		const { customerId } = req.params;
 		const { page, size } = req.query;
+
+		const { skip, pageSize } = PaginationHelper.parsePagination({
+			page: +page!,
+			pageSize: +size!,
+		});
+
 		const [products, total] =
-			await this.customerFavoriteProductService.findAllByCustomerIdPaginated(
+			await this.customerFavoriteProductService.findAllByCustomerIdAndCount(
 				+customerId,
-				+page!,
-				+size!,
+				skip,
+				pageSize,
 			);
 
 		const response: IPage<CustomerFavoriteProductDTO> = {
 			content: CustomerFavoriteProductMapper.entityListToDTOList(products),
 			pageNumber: +page! || 1,
-			pageSize: +size! || +process.env.DEFAULT_PAGE_SIZE!,
+			pageSize: pageSize,
 			totalElements: total,
-			totalPages: Math.ceil(total / (+size! || +process.env.DEFAULT_PAGE_SIZE!)),
+			totalPages: Math.ceil(total / pageSize),
 		};
 
 		res.status(200).send(response);

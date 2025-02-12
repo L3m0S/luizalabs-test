@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 import { IPage } from '@presentation/http/interfaces/IPage';
-import { Customer } from 'domain/entities/Customer';
 import { CustomerService } from '@application/services/CustomerService';
 import { CustomerMaper } from '@application/mappers/customersMapper';
 import { CreateCustomerDTO } from '@application/dtos/CreateCustomerInputDTO';
 import { ICustomerService } from '@application/interfaces/ICustomerService';
+import { Customer } from '@domain/entities/Customer';
+import { PaginationHelper } from '@application/helpers/Paginationhelper';
 
 @injectable()
 export class CustomerController {
@@ -40,14 +41,19 @@ export class CustomerController {
 
 	public async getAllPaginated(req: Request, res: Response) {
 		const { page, size } = req.query;
-		const [customers, total] = await this.customerService.getAllPaginated(+page!, +size!);
+		const { skip, pageSize } = PaginationHelper.parsePagination({
+			page: +page!,
+			pageSize: +size!,
+		});
+
+		const [customers, total] = await this.customerService.getAllPaginated(skip, pageSize);
 
 		const response: IPage<Customer> = {
 			content: CustomerMaper.entityListToDTOList(customers),
 			pageNumber: +page! || 1,
-			pageSize: +size! || +process.env.DEFAULT_PAGE_SIZE!,
+			pageSize: pageSize,
 			totalElements: total,
-			totalPages: Math.ceil(total / +size!),
+			totalPages: Math.ceil(total / pageSize),
 		};
 
 		res.status(200).send(response);
