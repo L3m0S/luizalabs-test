@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "nodemon",
-		"build": "tsc -b tsconfig.json && tsc-alias",
+		"build": "tsc -b && tsc-alias",
 		"lint:check": "prettier --check .",
 		"lint:fix": "prettier --write .",
 		"test": "vitest",

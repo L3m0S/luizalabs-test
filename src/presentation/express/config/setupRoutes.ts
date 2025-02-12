@@ -10,7 +10,7 @@ export const setupRoutes = (app: Express): void => {
 
 	readdirSync(ROUTES_DIR).map(async (fileName) => {
 		if (['.routes.ts', '.routes.js'].some((endRouter) => fileName.endsWith(endRouter))) {
-			(await import(`@presentation/http/routes/${fileName}`)).default(router);
+			(await import(`../../http/routes/${fileName}`)).default(router);
 		}
 	});
 };
