@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import express, { Router } from 'express';
+import express from 'express';
 import 'express-async-errors';
 import cors from 'cors';
 import morgan from 'morgan';

@@ -4,7 +4,6 @@ import { IProdutcsApiProvider } from '@application/interfaces/IProductsApiProvid
 import { IProductService } from '@application/interfaces/IProductService';
 import { ProductService } from '@application/services/ProductService';
 import { ProductsApiProvider } from '@infra/providers/ProductsApiProvider';
-import { ProductController } from '@presentation/http/controllers/ProductController';
 import { ICustomerService } from '@application/interfaces/ICustomerService';
 import { CustomerService } from '@application/services/CustomerService';
 import { ICustomerFavoriteProductService } from '@application/interfaces/ICustomerFavoriteProductsService';
@@ -12,28 +11,22 @@ import { CustomerFavoriteProductService } from '@application/services/CustomerFa
 import { ICircuitBreakerProvider } from '@application/interfaces/ICircuitBreakerProvider';
 import { OpossumCircuitBreakerProvider } from '@infra/providers/OpossumCircuitBreakerProvider';
 
-// Map interfaces to implementations using tokens
-
-container.register('ProductController', {
-  useClass: ProductController,
-});
-
 container.register<IProductService>('IProductService', {
-  useClass: ProductService,
+	useClass: ProductService,
 });
 
 container.register<IProdutcsApiProvider>('IProdutcsApiProvider', {
-  useClass: ProductsApiProvider,
+	useClass: ProductsApiProvider,
 });
 
 container.register<ICustomerService>('ICustomerService', {
-  useClass: CustomerService,
+	useClass: CustomerService,
 });
 
 container.register<ICustomerFavoriteProductService>('ICustomerFavoriteProductService', {
-  useClass: CustomerFavoriteProductService,
+	useClass: CustomerFavoriteProductService,
 });
 
 container.register<ICircuitBreakerProvider>('ICircuitBreakerProvider', {
-  useClass: OpossumCircuitBreakerProvider,
+	useClass: OpossumCircuitBreakerProvider,
 });
