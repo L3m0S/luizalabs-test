@@ -1,0 +1,329 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Luiza labs Favorite Product API",
+		"version": "1.0.0",
+		"description": "API for managing customers and favorite products"
+	},
+	"servers": [
+		{
+			"url": "http://localhost:3000",
+			"description": "Local development server"
+		}
+	],
+	"tags": [
+		{
+			"name": "Customers",
+			"description": "Customer management operations"
+		},
+		{
+			"name": "Favorites",
+			"description": "Customer favorite products management"
+		}
+	],
+	"paths": {
+		"/api/v1/customers": {
+			"post": {
+				"tags": ["Customers"],
+				"summary": "Create Customer",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Customer"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Customer created successfully"
+					},
+					"400": {
+						"description": "Invalid input"
+					}
+				}
+			},
+			"get": {
+				"tags": ["Customers"],
+				"summary": "List Customers",
+				"parameters": [
+					{
+						"name": "size",
+						"in": "query",
+						"schema": {
+							"type": "integer"
+						},
+						"description": "Number of items per page"
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"schema": {
+							"type": "integer"
+						},
+						"description": "Page number"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "List of customers",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Customer"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input"
+					}
+				}
+			}
+		},
+		"/api/v1/customers/{id}": {
+			"get": {
+				"tags": ["Customers"],
+				"summary": "Get Customer By ID",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Customer details",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Customer"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Customer not found"
+					}
+				}
+			},
+			"put": {
+				"tags": ["Customers"],
+				"summary": "Update Customer",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CustomerUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Customer updated successfully"
+					},
+					"400": {
+						"description": "Invalid input"
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Customers"],
+				"summary": "Delete Customer",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Customer deleted successfully"
+					},
+					"404": {
+						"description": "Customer not found"
+					}
+				}
+			}
+		},
+		"/api/v1/customers/{customerId}/favorites": {
+			"get": {
+				"tags": ["Favorites"],
+				"summary": "List favorites",
+				"parameters": [
+					{
+						"name": "customerId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "List of favorite products",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/FavoriteProduct"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["Favorites"],
+				"summary": "Add favorite",
+				"parameters": [
+					{
+						"name": "customerId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"productId": {
+										"type": "integer"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Favorite added successfully"
+					}
+				}
+			}
+		},
+		"/api/v1/customers/{customerId}/favorites/{externalProductId}": {
+			"delete": {
+				"tags": ["Favorites"],
+				"summary": "Delete favorite",
+				"parameters": [
+					{
+						"name": "customerId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "favoriteId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Favorite removed successfully"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"Customer": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string",
+						"format": "email"
+					}
+				}
+			},
+			"CustomerUpdate": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string",
+						"format": "email"
+					}
+				}
+			},
+			"Product": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number"
+					},
+					"image": {
+						"type": "string"
+					},
+					"rating": {
+						"type": "number"
+					}
+				}
+			},
+			"FavoriteProduct": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer"
+					},
+					"product": {
+						"$ref": "#/components/schemas/Product"
+					}
+				}
+			}
+		}
+	}
+}

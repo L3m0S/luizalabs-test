@@ -4,6 +4,7 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
+COPY swagger.json ./
 
 RUN npm install --production
 RUN npm cache clean --force
@@ -13,6 +14,8 @@ RUN rm -rf node_modules
 COPY . .
 
 RUN npm run build
+
+RUN mv swagger.json ./build/src/presentation/http/routes
 
 FROM node:22-alpine
 
