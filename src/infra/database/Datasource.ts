@@ -1,4 +1,5 @@
 import { DataSource } from "typeorm";
+import { resolve } from 'path'
 
 export const AppDataSource = new DataSource({
   type: process.env.DB_TYPE as any,
@@ -9,7 +10,6 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: process.env.DB_SYNCHRONIZE === "true",
   logging: process.env.DB_LOGGING === "true",
-  entities: [],
-  subscribers: [],
+  entities: [resolve(__dirname, '..', '..', 'domain', 'entities', '*.{ts,js}')],
   migrations: [],
 });
