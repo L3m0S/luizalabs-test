@@ -12,10 +12,10 @@ export class Customer {
 	id?: number;
 
 	@Column({ type: 'varchar', length: 255, nullable: false })
-	name?: string;
+	name!: string;
 
 	@Column({ type: 'varchar', length: 255, nullable: false, unique: true })
-	email?: string;
+	email!: string;
 
 	@CreateDateColumn()
 	created_at?: Date;

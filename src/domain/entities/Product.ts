@@ -1,11 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'products' })
 export class Product {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column({ name: 'external_product_id', nullable: false })
+	@Column('integer', { name: 'external_product_id', nullable: false })
 	externalProductId!: number;
 
 	@Column('varchar', { nullable: false })
